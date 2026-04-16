@@ -122,7 +122,7 @@ services:
         condition: service_healthy
       evo-auth:
         condition: service_healthy
-    entrypoint: docker/entrypoints/rails.sh
+    entrypoint: ./evo-ai-crm-community/docker/entrypoints/rails.sh
     command: ["bundle", "exec", "rails", "s", "-p", "3000", "-b", "0.0.0.0"]
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/health/live"]
@@ -160,7 +160,7 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    entrypoint: docker/entrypoints/rails.sh
+    entrypoint: ./evo-ai-crm-community/docker/entrypoints/rails.sh
     command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"]
 
   # ---------------------------------------------------------------------------
@@ -243,57 +243,4 @@ services:
     env_file: .env
     environment:
       LISTEN_ADDR: 0.0.0.0:8080
-      REDIS_URL: redis://:${REDIS_PASSWORD:-evoai_redis_pass}@redis:6379
-      AI_PROCESSOR_URL: http://evo-processor:8000
-    depends_on:
-      redis:
-        condition: service_healthy
-      evo-processor:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
-      interval: 15s
-      timeout: 5s
-      retries: 5
-      start_period: 15s
-
-  # ---------------------------------------------------------------------------
-  # Frontend (React / Vite / Nginx) — Port 5173
-  # ---------------------------------------------------------------------------
-  evo-frontend:
-    build:
-      context: ./evo-ai-frontend-community
-      dockerfile: Dockerfile
-      args:
-        VITE_API_URL: ${VITE_API_URL:-http://localhost:3000}
-        VITE_AUTH_API_URL: ${VITE_AUTH_API_URL:-http://localhost:3001}
-        VITE_EVOAI_API_URL: ${VITE_EVOAI_API_URL:-http://localhost:5555}
-        VITE_AGENT_PROCESSOR_URL: ${VITE_AGENT_PROCESSOR_URL:-http://localhost:8000}
-    restart: unless-stopped
-    environment:
-      VITE_API_URL: ${VITE_API_URL:-http://localhost:3000}
-      VITE_AUTH_API_URL: ${VITE_AUTH_API_URL:-http://localhost:3001}
-      VITE_WS_URL: ${VITE_WS_URL:-http://localhost:3000}
-      VITE_EVOAI_API_URL: ${VITE_EVOAI_API_URL:-http://localhost:5555}
-      VITE_AGENT_PROCESSOR_URL: ${VITE_AGENT_PROCESSOR_URL:-http://localhost:8000}
-    ports:
-      - "5173:80"
-    depends_on:
-      evo-auth:
-        condition: service_healthy
-      evo-crm:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/health"]
-      interval: 15s
-      timeout: 5s
-      retries: 3
-      start_period: 15s
-
-volumes:
-  postgres_data:
-  redis_data:
-  crm_bundle:
-  crm_node_modules:
-  crm_cache:
-  processor_logs:
+      RED
