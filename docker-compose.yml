@@ -45,6 +45,8 @@ services:
       RAILS_ENV: production
       REDIS_URL: redis://:${REDIS_PASSWORD:-evoai_redis_pass}@redis:6379/1
       POSTGRES_HOST: postgres
+      FRONTEND_URL: ${FRONTEND_URL:-https://atendimento.novohorizonte.com}
+      CORS_ORIGINS: ${FRONTEND_URL:-https://atendimento.novohorizonte.com}
     depends_on:
       postgres:
         condition: service_healthy
@@ -97,6 +99,8 @@ services:
       BOT_RUNTIME_URL: http://evo-bot-runtime:8080
       BOT_RUNTIME_SECRET: ${BOT_RUNTIME_SECRET:-evo-bot-runtime-dev-secret}
       BOT_RUNTIME_POSTBACK_BASE_URL: http://evo-crm:3000
+      FRONTEND_URL: ${FRONTEND_URL:-https://atendimento.novohorizonte.com}
+      CORS_ORIGINS: ${FRONTEND_URL:-https://atendimento.novohorizonte.com}
     expose:
       - "3000"
     volumes:
@@ -161,6 +165,8 @@ services:
       EVO_AUTH_BASE_URL: http://evo-auth:3001
       AI_PROCESSOR_URL: http://evo-processor:8000
       AI_PROCESSOR_VERSION: ${AI_PROCESSOR_VERSION:-v1}
+      FRONTEND_URL: ${FRONTEND_URL:-https://atendimento.novohorizonte.com}
+      CORS_ORIGINS: ${FRONTEND_URL:-https://atendimento.novohorizonte.com}
     depends_on:
       postgres:
         condition: service_healthy
@@ -187,6 +193,8 @@ services:
       PORT: "8000"
       EVO_AI_CRM_URL: http://evo-crm:3000
       CORE_SERVICE_URL: http://evo-core:5555/api/v1
+      FRONTEND_URL: ${FRONTEND_URL:-https://atendimento.novohorizonte.com}
+      CORS_ORIGINS: ${FRONTEND_URL:-https://atendimento.novohorizonte.com}
     volumes:
       - processor_logs:/app/logs
     depends_on:
