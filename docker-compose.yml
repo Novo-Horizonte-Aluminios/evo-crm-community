@@ -74,6 +74,8 @@ services:
       redis:
         condition: service_healthy
     command: bash -c "bundle exec sidekiq"
+    healthcheck:
+      disable: true
 
   # ---------------------------------------------------------------------------
   # CRM Service
@@ -139,6 +141,8 @@ services:
         condition: service_healthy
     entrypoint: ./docker/entrypoints/rails.sh
     command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"]
+    healthcheck:
+      disable: true
 
   # ---------------------------------------------------------------------------
   # Core Service
@@ -162,6 +166,7 @@ services:
       EVOLUTION_BASE_URL: http://evo-crm:3000
       EVO_AUTH_BASE_URL: http://evo-auth:3001
       AI_PROCESSOR_URL: http://evo-processor:8000
+      AI_PROCESSOR_VERSION: ${AI_PROCESSOR_VERSION:-v1}
     depends_on:
       postgres:
         condition: service_healthy
