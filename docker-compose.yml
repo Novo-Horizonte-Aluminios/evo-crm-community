@@ -108,7 +108,7 @@ services:
       redis:
         condition: service_healthy
       evo-auth:
-        condition: service_healthy
+        condition: service_started
     entrypoint: ./docker/entrypoints/rails.sh
     command: ["bundle", "exec", "rails", "s", "-p", "3000", "-b", "0.0.0.0"]
     healthcheck:
@@ -249,7 +249,7 @@ services:
       - "5173:80"
     depends_on:
       evo-auth:
-        condition: service_healthy
+        condition: service_started
       evo-crm:
         condition: service_started
     healthcheck:
